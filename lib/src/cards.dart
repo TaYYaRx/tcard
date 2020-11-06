@@ -43,6 +43,9 @@ class TCard extends StatefulWidget {
   /// 卡片尺寸
   final Size size;
 
+  ///  Kaydırma hızı
+  final double speed;
+
   /// 卡片列表
   final List<Widget> cards;
 
@@ -58,8 +61,9 @@ class TCard extends StatefulWidget {
   /// 卡片控制器
   final TCardController controller;
 
-  const TCard({
+  TCard({
     @required this.cards,
+    @required this.speed,
     this.controller,
     this.onForward,
     this.onBack,
@@ -94,8 +98,7 @@ class _TCardState extends State<TCard> with TickerProviderStateMixin {
 
   //  前面的卡片
   Widget _frontCard(BoxConstraints constraints) {
-    Widget child =
-        _frontCardIndex < _cards.length ? _cards[_frontCardIndex] : Container();
+    Widget child = _frontCardIndex < _cards.length ? _cards[_frontCardIndex] : Container();
     bool forward = _cardChangeController.status == AnimationStatus.forward;
     bool reverse = _cardReverseController.status == AnimationStatus.forward;
 
@@ -135,9 +138,7 @@ class _TCardState extends State<TCard> with TickerProviderStateMixin {
 
   // 中间的卡片
   Widget _middleCard(BoxConstraints constraints) {
-    Widget child = _frontCardIndex < _cards.length - 1
-        ? _cards[_frontCardIndex + 1]
-        : Container();
+    Widget child = _frontCardIndex < _cards.length - 1 ? _cards[_frontCardIndex + 1] : Container();
     bool forward = _cardChangeController.status == AnimationStatus.forward;
     bool reverse = _cardReverseController.status == AnimationStatus.forward;
 
@@ -180,9 +181,7 @@ class _TCardState extends State<TCard> with TickerProviderStateMixin {
 
   // 后面的卡片
   Widget _backCard(BoxConstraints constraints) {
-    Widget child = _frontCardIndex < _cards.length - 2
-        ? _cards[_frontCardIndex + 2]
-        : Container();
+    Widget child = _frontCardIndex < _cards.length - 2 ? _cards[_frontCardIndex + 2] : Container();
     bool forward = _cardChangeController.status == AnimationStatus.forward;
     bool reverse = _cardReverseController.status == AnimationStatus.forward;
 
@@ -225,8 +224,7 @@ class _TCardState extends State<TCard> with TickerProviderStateMixin {
 
   // 判断是否在进行动画
   bool _isAnimating() {
-    return _cardChangeController.status == AnimationStatus.forward ||
-        _cardReverseController.status == AnimationStatus.forward;
+    return _cardChangeController.status == AnimationStatus.forward || _cardReverseController.status == AnimationStatus.forward;
   }
 
   // 运行卡片回弹动画
@@ -289,9 +287,7 @@ class _TCardState extends State<TCard> with TickerProviderStateMixin {
       );
     }
 
-    if (widget.onEnd != null &&
-        widget.onEnd is Function &&
-        _frontCardIndex >= _cards.length) {
+    if (widget.onEnd != null && widget.onEnd is Function && _frontCardIndex >= _cards.length) {
       widget.onEnd();
     }
   }
@@ -330,11 +326,11 @@ class _TCardState extends State<TCard> with TickerProviderStateMixin {
   // 更新最前面卡片的位置
   void _updateFrontCardAlignment(DragUpdateDetails details, Size size) {
     // 移动的速度
-    final double speed = 10.0;
+    // final double speed = 10.0;
 
     _frontCardAlignment += Alignment(
-      details.delta.dx / (size.width / 2) * speed,
-      details.delta.dy / (size.height / 2) * speed,
+      details.delta.dx / (size.width / 2) * (widget.speed),
+      details.delta.dy / (size.height / 2) * (widget.speed),
     );
     // 设置最前面卡片的旋转角度
     _frontCardRotation = _frontCardAlignment.x;
